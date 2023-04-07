@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+	<title>Document</title>
+	 <script th:inline="javascript">
+		/*<![CDATA[*/
+			const msg = /*[[ ${msg} ]]*/
+			$(document).ready(function(){
+  				if(msg != null){
+					$("#modal-example").attr("open", true);      
+  				}
+			});
+		/*]]>*/
+	</script>
+</head>
+<body>
+	<main class="container">
+		<nav aria-label="breadcrumb">
+	        <ul>
+	          <li><a th:href="@{/}">Home</a></li>
+	          <li><a th:href="@{/create}">추가하기</a></li>
+	        </ul>
+      	</nav>
+
+		<h2 style="text-align: center;">상품등록하기</h2>
+		<form th:action="@{/create}" method="post" enctype="multipart/form-data">
+			<div>
+			 	<label for="productName">
+					상품명
+					<input type="text" id="productName" name="productName" placeholder="상품명을 입력해주세요." required>
+			  	</label>
+		  
+			  	<label for="quantity">
+					수량
+					<input type="number" id="quantity" name="quantity" required>
+			  	</label>
+				<label for="files">File browser
+					<input type="file" id="files" name="files" multiple>
+				</label>
+			</div>
+			<button type="reset" class="secondary">초기화</button>
+			<button type="submit">추가하기</button>
+		</form>
+	</main>
+	
+	<!-- Modal -->
+	<dialog id="modal-example">
+	  <article>
+	    <a href="#close"
+	      aria-label="Close"
+	      class="close"
+	      data-target="modal-example"
+	      onClick="toggleModal(event)">
+	    </a>
+	    <h3>Confirm your action!</h3>
+	    <p>
+	     [[ ${msg} ]]
+	    </p>
+	    <footer>
+	      <a href="#confirm"
+	        role="button"
+	        data-target="modal-example"
+	        onClick="toggleModal(event)">
+	        Confirm
+	      </a>
+	    </footer>
+	  </article>
+	</dialog>
+	
+	<script>
+	/*
+	 * Modal
+	 *
+	 * Pico.css - https://picocss.com
+	 * Copyright 2019-2023 - Licensed under MIT
+	 */
+	
+	// Config
+	const isOpenClass = 'modal-is-open';
+	const openingClass = 'modal-is-opening';
+	const closingClass = 'modal-is-closing';
+	const animationDuration = 400; // ms
+	let visibleModal = null;
+	
+	
+	// Toggle modal
+	const toggleModal = event => {
+	  event.preventDefault();
+	  const modal = document.getElementById(event.currentTarget.getAttribute('data-target'));
+	  (typeof(modal) != 'undefined' && modal != null)
+	    && isModalOpen(modal) ? closeModal(modal) : openModal(modal)
+	}
+	
+	// Is modal open
+	const isModalOpen = modal => {
+	  return modal.hasAttribute('open') && modal.getAttribute('open') != 'false' ? true : false;
+	}
+	
+	// Open modal
+	const openModal = modal => {
+	  if (isScrollbarVisible()) {
+	    document.documentElement.style.setProperty('--scrollbar-width', `${getScrollbarWidth()}px`);
+	  }
+	  document.documentElement.classList.add(isOpenClass, openingClass);
+	  setTimeout(() => {
+	    visibleModal = modal;
+	    document.documentElement.classList.remove(openingClass);
+	  }, animationDuration);
+	  modal.setAttribute('open', true);
+	}
+	
+	// Close modal
+	const closeModal = modal => {
+	  visibleModal = null;
+	  document.documentElement.classList.add(closingClass);
+	  setTimeout(() => {
+	    document.documentElement.classList.remove(closingClass, isOpenClass);
+	    document.documentElement.style.removeProperty('--scrollbar-width');
+	    modal.removeAttribute('open');
+	  }, animationDuration);
+	}
+	
+	// Close with a click outside
+	document.addEventListener('click', event => {
+	  if (visibleModal != null) {
+	    const modalContent = visibleModal.querySelector('article');
+	    const isClickInside = modalContent.contains(event.target);
+	    !isClickInside && closeModal(visibleModal);
+	  }
+	});
+	
+	// Close with Esc key
+	document.addEventListener('keydown', event => {
+	  if (event.key === 'Escape' && visibleModal != null) {
+	    closeModal(visibleModal);
+	  }
+	});
+	
+	// Get scrollbar width
+	const getScrollbarWidth = () => {
+	
+	  // Creating invisible container
+	  const outer = document.createElement('div');
+	  outer.style.visibility = 'hidden';
+	  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+	  outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
+	  document.body.appendChild(outer);
+	
+	  // Creating inner element and placing it in the container
+	  const inner = document.createElement('div');
+	  outer.appendChild(inner);
+	
+	  // Calculating difference between container's full width and the child width
+	  const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+	
+	  // Removing temporary elements from the DOM
+	  outer.parentNode.removeChild(outer);
+	
+	  return scrollbarWidth;
+	}
+	
+	// Is scrollbar visible
+	const isScrollbarVisible = () => {
+	  return document.body.scrollHeight > screen.height;
+	}
+	
+	</script>
+	
+</body>
+</html>
+

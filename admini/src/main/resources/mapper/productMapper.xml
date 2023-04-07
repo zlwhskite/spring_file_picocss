@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admini.product.ProductMapper">
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO products(product_name, quantity)
+			VALUES (#{productName}, #{quantity})
+	</insert>
+	
+	<select id="findAll" resultType="ProductVo">
+		select id, product_name, quantity
+		from products
+	</select>
+	
+	<select id="findByName" resultType="ProductVo">
+		select id, product_name, quantity
+		from products
+		where product_name = #{productName}
+	</select>
+	
+
+</mapper>

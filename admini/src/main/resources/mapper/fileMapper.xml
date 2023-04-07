@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.admini.file.FileMapper">
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO files(product_id, src)
+			VALUES (#{productId}, #{src})
+	</insert>
+	
+	<select id="findAll" resultType="FileVo">
+		select id, product_id, src
+		from files
+	</select>
+	
+	<select id="distinctFindAll" resultType="FileVo">
+		select * from
+		( select * from files 
+		where 
+		(id, product_id ) 
+		in 
+		( select min(id) as id, product_id from files group by product_id ) 
+		order by id desc ) 
+		files 
+		group by files.product_id 
+	</select>
+
+</mapper>
