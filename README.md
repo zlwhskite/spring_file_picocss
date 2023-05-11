@@ -5,6 +5,6 @@
 - Java 11
 - Springboot 2.7.7
 - Thymeleaf
-- Pico.css
+- Pico.css (https://picocss.com/docs/)
 - MyBatis(H2)
 - Gradle
